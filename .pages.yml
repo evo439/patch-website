@@ -18,11 +18,8 @@ content:
 
   - name: settings
     label: "Band Settings"
-    type: collection
-    path: src/content/settings
-    filename: "general"
-    extension: json
-    format: json
+    type: file
+    path: src/content/settings/band.json
     fields:
       - { name: "bio", label: "Band Biography", type: "rich-text" }
       - { name: "contactEmail", label: "Contact E-mail", type: "string" }
