@@ -1,6 +1,7 @@
 ---
 import Icon from "./Icon.astro";
 import { SITE, NAVIGATION } from "../config/theme.config.ts";
+import { getCollection } from "astro:content";
 
 const current = Astro.url.pathname.replace(/\/$/, "") || "/";
 const isHome = current === "/";
@@ -14,6 +15,24 @@ const headerClass = isHome
 const iconClass = isHome
   ? "home-header-action inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors"
   : "inline-flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground";
+
+// Dynamic custom pages from CMS
+let customPages = [];
+try {
+  customPages = await getCollection("pages");
+} catch {
+  customPages = [];
+}
+
+const dynamicNavItems = customPages
+  .filter((page) => page.data?.showInNav)
+  .sort((a, b) => (a.data.navOrder ?? 10) - (b.data.navOrder ?? 10))
+  .map((page) => ({
+    label: page.data.title,
+    to: `/${page.id}`,
+  }));
+
+const allNavItems = [...NAVIGATION, ...dynamicNavItems];
 ---
 
 <header class={headerClass} data-home-header={isHome ? "true" : undefined} data-scrolled="false">
@@ -24,7 +43,7 @@ const iconClass = isHome
 
     <nav class="hidden items-center gap-8 md:flex" aria-label="Primary navigation">
       {
-        NAVIGATION.map((item) => {
+        allNavItems.map((item) => {
           const exact = item.to === "/";
           const active = exact ? current === "/" : current.startsWith(item.to);
           return (
@@ -67,7 +86,7 @@ const iconClass = isHome
   <div id="mobile-menu" data-menu-panel class="border-t border-border/60 bg-background text-foreground shadow-xl md:hidden" hidden>
     <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-4" aria-label="Mobile navigation">
       {
-        NAVIGATION.map((item) => {
+        allNavItems.map((item) => {
           const exact = item.to === "/";
           const active = exact ? current === "/" : current.startsWith(item.to);
           return (

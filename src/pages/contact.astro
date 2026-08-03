@@ -2,10 +2,13 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import Icon from "../components/Icon.astro";
-import { SITE, CONTACT } from "../config/theme.config.ts";
+import { SITE } from "../config/theme.config.ts";
+import { getBandInfo } from "../lib/bandSettings";
 
 // Replace with your Web3Forms access key from https://web3forms.com
 const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
+
+const band = await getBandInfo();
 ---
 
 <BaseLayout
@@ -24,7 +27,7 @@ const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
       </p>
     </header>
 
-    <div class="mt-12 grid gap-12 lg:grid-cols-[1fr_320px]">
+    <div class="mt-12 grid gap-12 lg:grid-cols-[1fr_340px]">
       <!-- Web3Forms Contact Form -->
       <form
         action="https://api.web3forms.com/submit"
@@ -33,7 +36,6 @@ const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
       >
         <!-- Web3Forms Access Key Input -->
         <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
-        <!-- Optional: Redirect URL after submission -->
         <input type="hidden" name="subject" value="New Contact Form Submission - P‡TCH Website" />
         <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
 
@@ -110,36 +112,69 @@ const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
         <div>
           <h3 class="text-xs font-semibold uppercase tracking-wider text-primary">Direct Contact</h3>
           <ul class="mt-4 space-y-4 text-sm font-medium">
-            <li>
-              <a
-                href={`mailto:${CONTACT.email}`}
-                class="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
-              >
-                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
-                  <Icon name="mail" class="h-4 w-4" />
-                </div>
-                <div>
-                  <span class="block text-xs text-muted-foreground">Email</span>
-                  {CONTACT.email}
-                </div>
-              </a>
-            </li>
-            <li>
-              <a
-                href={CONTACT.socialUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
-              >
-                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
-                  <Icon name="instagram" class="h-4 w-4" />
-                </div>
-                <div>
-                  <span class="block text-xs text-muted-foreground">Instagram</span>
-                  {CONTACT.socialHandle}
-                </div>
-              </a>
-            </li>
+            {
+              band.email && (
+                <li>
+                  <a
+                    href={`mailto:${band.email}`}
+                    class="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
+                  >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-foreground">
+                      <Icon name="mail" class="h-4 w-4" />
+                    </div>
+                    <div>
+                      <span class="block text-xs text-muted-foreground">Email</span>
+                      {band.email}
+                    </div>
+                  </a>
+                </li>
+              )
+            }
+
+            {
+              band.phone && (
+                <li>
+                  <a
+                    href={`tel:${band.phone.replace(/\s+/g, "")}`}
+                    class="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
+                  >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-foreground">
+                      <Icon name="phone" class="h-4 w-4" />
+                    </div>
+                    <div>
+                      <span class="block text-xs text-muted-foreground">Phone / Booking</span>
+                      {band.phone}
+                    </div>
+                  </a>
+                </li>
+              )
+            }
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-primary">Follow & Listen</h3>
+          <ul class="mt-4 space-y-3 text-sm font-medium">
+            {
+              band.socialLinks.map((social) => (
+                <li>
+                  <a
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
+                  >
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-muted text-foreground">
+                      <Icon name={social.icon} class="h-4 w-4" />
+                    </div>
+                    <div>
+                      <span class="block text-xs text-muted-foreground">{social.name}</span>
+                      <span class="text-xs font-semibold">{social.handle}</span>
+                    </div>
+                  </a>
+                </li>
+              ))
+            }
           </ul>
         </div>
 

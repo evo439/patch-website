@@ -1,15 +1,30 @@
 import { SITE } from "../config/theme.config.ts";
+import { getCollection } from "astro:content";
 
 const BASE_URL = SITE.url || "";
 
 export async function GET() {
-  const entries = [
+  const staticEntries = [
     { path: "/", changefreq: "weekly", priority: "1.0" },
     { path: "/shows", changefreq: "weekly", priority: "0.9" },
     { path: "/music", changefreq: "monthly", priority: "0.8" },
     { path: "/gallery", changefreq: "monthly", priority: "0.8" },
     { path: "/contact", changefreq: "monthly", priority: "0.7" },
   ];
+
+  let customPages = [];
+  try {
+    customPages = await getCollection("pages");
+  } catch {
+    customPages = [];
+  }
+  const customEntries = customPages.map((page) => ({
+    path: `/${page.id}`,
+    changefreq: "monthly",
+    priority: "0.7",
+  }));
+
+  const entries = [...staticEntries, ...customEntries];
 
   const urls = entries.map((entry) =>
     [

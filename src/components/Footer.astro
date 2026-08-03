@@ -1,8 +1,10 @@
 ---
 import Icon from "./Icon.astro";
-import { SITE, NAVIGATION, SOCIAL_LINKS } from "../config/theme.config.ts";
+import { SITE, NAVIGATION } from "../config/theme.config.ts";
+import { getBandInfo } from "../lib/bandSettings";
 
 const { flush = false } = Astro.props;
+const band = await getBandInfo();
 ---
 
 <footer class:list={[flush ? "mt-0" : "mt-24", "border-t border-border/60 bg-background"]}>
@@ -10,11 +12,11 @@ const { flush = false } = Astro.props;
     <div class="md:col-span-2">
       <div class="font-serif text-2xl font-bold">{SITE.name}</div>
       <p class="mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-        {SITE.description}
+        {band.bio || SITE.description}
       </p>
       <div class="mt-6 flex flex-wrap items-center gap-3 text-muted-foreground">
         {
-          SOCIAL_LINKS.map((link) => (
+          band.socialLinks.map((link) => (
             <a
               href={link.href}
               target="_blank"

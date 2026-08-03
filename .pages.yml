@@ -16,12 +16,29 @@ content:
       - { name: "stad", label: "City & Country", type: "string" }
       - { name: "ticketUrl", label: "Ticket or Info Link", type: "string" }
 
+  - name: pages
+    label: "Custom Pages"
+    type: collection
+    path: src/content/pages
+    extension: json
+    format: json
+    fields:
+      - { name: "title", label: "Page Title", type: "string" }
+      - { name: "description", label: "Meta Description (SEO)", type: "string" }
+      - { name: "content", label: "Page Body Content", type: "rich-text" }
+      - { name: "showInNav", label: "Show in Navbar?", type: "boolean", default: true }
+      - { name: "navOrder", label: "Navbar Order Position (e.g. 10)", type: "number", default: 10 }
+
   - name: settings
-    label: "Band Settings"
+    label: "Band Settings & Contact Info"
     type: file
     path: src/content/settings/band.json
     fields:
       - { name: "bio", label: "Band Biography", type: "rich-text" }
       - { name: "contactEmail", label: "Contact E-mail", type: "string" }
-      - { name: "instagramUrl", label: "Instagram URL", type: "string" }
-      - { name: "spotifyUrl", label: "Spotify URL", type: "string" }
+      - { name: "contactPhone", label: "Contact Phone / Booking Number", type: "string" }
+      - { name: "facebookUrl", label: "Facebook Page URL", type: "string" }
+      - { name: "instagramUrl", label: "Instagram Profile URL", type: "string" }
+      - { name: "youtubeUrl", label: "YouTube Channel URL", type: "string" }
+      - { name: "tiktokUrl", label: "TikTok Profile URL", type: "string" }
+      - { name: "spotifyUrl", label: "Spotify Artist URL", type: "string" }

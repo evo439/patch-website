@@ -21,11 +21,29 @@ const settings = defineCollection({
     base: "./src/content/settings",
   }),
   schema: z.object({
-    bio: z.string(),
-    contactEmail: z.string(),
+    bio: z.string().optional(),
+    contactEmail: z.string().optional(),
+    contactPhone: z.string().optional(),
+    facebookUrl: z.string().optional(),
     instagramUrl: z.string().optional(),
+    youtubeUrl: z.string().optional(),
+    tiktokUrl: z.string().optional(),
     spotifyUrl: z.string().optional(),
   }),
 });
 
-export const collections = { shows, settings };
+const pages = defineCollection({
+  loader: glob({
+    pattern: "*.json",
+    base: "./src/content/pages",
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    content: z.string(),
+    showInNav: z.boolean().default(true),
+    navOrder: z.number().default(10),
+  }),
+});
+
+export const collections = { shows, settings, pages };

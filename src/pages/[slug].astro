@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { SITE } from "../config/theme.config.ts";
+
+export async function getStaticPaths() {
+  const pages = await getCollection("pages");
+  return pages.map((page) => ({
+    params: { slug: page.id },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const { title, description, content } = page.data;
+const canonicalUrl = `/${page.id}`;
+---
+
+<BaseLayout
+  title={`${title} - ${SITE.name}`}
+  description={description || `${title} - Official ${SITE.name} page.`}
+  canonical={canonicalUrl}
+>
+  <div class="mx-auto max-w-4xl px-5 pt-12 pb-20">
+    <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: title }]} />
+
+    <header class="mt-6 border-b border-border/60 pb-10">
+      <h1 class="font-serif text-4xl font-semibold sm:text-5xl">{title}</h1>
+      {description && <p class="mt-4 text-lg text-muted-foreground">{description}</p>}
+    </header>
+
+    <article class="prose-article mt-8 max-w-none text-foreground/90 leading-relaxed" set:html={content} />
+  </div>
+</BaseLayout>
