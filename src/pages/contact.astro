@@ -1,0 +1,155 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Icon from "../components/Icon.astro";
+import { SITE, CONTACT } from "../config/theme.config.ts";
+
+// Replace with your Web3Forms access key from https://web3forms.com
+const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
+---
+
+<BaseLayout
+  title={`Contact & Booking - ${SITE.name}`}
+  description="Get in touch with P‡TCH for booking inquiries, press kits, or general band questions."
+  canonical="/contact"
+>
+  <div class="mx-auto max-w-5xl px-5 pt-12 pb-16">
+    <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Contact" }]} />
+
+    <header class="mt-6 border-b border-border/60 pb-10">
+      <span class="text-xs font-medium uppercase tracking-[0.2em] text-primary">Get in Touch</span>
+      <h1 class="mt-2 font-serif text-5xl font-semibold sm:text-6xl">Contact P‡TCH</h1>
+      <p class="mt-4 max-w-2xl text-lg text-muted-foreground">
+        For festival bookings, show inquiries, press inquiries, or general messages, send us a message below.
+      </p>
+    </header>
+
+    <div class="mt-12 grid gap-12 lg:grid-cols-[1fr_320px]">
+      <!-- Web3Forms Contact Form -->
+      <form
+        action="https://api.web3forms.com/submit"
+        method="POST"
+        class="space-y-6 rounded-2xl border border-border/60 bg-muted/20 p-6 sm:p-8 shadow-sm"
+      >
+        <!-- Web3Forms Access Key Input -->
+        <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
+        <!-- Optional: Redirect URL after submission -->
+        <input type="hidden" name="subject" value="New Contact Form Submission - P‡TCH Website" />
+        <input type="checkbox" name="botcheck" class="hidden" style="display: none;" />
+
+        <div>
+          <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Your Name <span class="text-primary">*</span>
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            required
+            placeholder="John Doe"
+            class="mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
+          />
+        </div>
+
+        <div>
+          <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Email Address <span class="text-primary">*</span>
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            required
+            placeholder="john@example.com"
+            class="mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
+          />
+        </div>
+
+        <div>
+          <label for="subject_input" class="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Subject
+          </label>
+          <input
+            id="subject_input"
+            name="user_subject"
+            type="text"
+            placeholder="Booking Inquiry / Press / General"
+            class="mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
+          />
+        </div>
+
+        <div>
+          <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            Message <span class="text-primary">*</span>
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            rows="6"
+            placeholder="Write your message here..."
+            class="mt-2 w-full rounded-md border border-border bg-background px-4 py-3 text-base text-foreground outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-md bg-foreground px-8 py-3.5 text-sm font-semibold text-background hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+        >
+          Send Message
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </form>
+
+      <!-- Contact Info Sidebar -->
+      <aside class="space-y-8 lg:border-l lg:border-border/60 lg:pl-10">
+        <div>
+          <h3 class="text-xs font-semibold uppercase tracking-wider text-primary">Direct Contact</h3>
+          <ul class="mt-4 space-y-4 text-sm font-medium">
+            <li>
+              <a
+                href={`mailto:${CONTACT.email}`}
+                class="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
+              >
+                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                  <Icon name="mail" class="h-4 w-4" />
+                </div>
+                <div>
+                  <span class="block text-xs text-muted-foreground">Email</span>
+                  {CONTACT.email}
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href={CONTACT.socialUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center gap-3 text-foreground hover:text-primary transition-colors"
+              >
+                <div class="flex h-9 w-9 items-center justify-center rounded-full bg-muted">
+                  <Icon name="instagram" class="h-4 w-4" />
+                </div>
+                <div>
+                  <span class="block text-xs text-muted-foreground">Instagram</span>
+                  {CONTACT.socialHandle}
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="rounded-xl border border-border/60 bg-muted/40 p-5">
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-foreground">Bookings & Management</h4>
+          <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+            P‡TCH is available for club shows, venue tours, and festival bookings throughout the Netherlands and internationally.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

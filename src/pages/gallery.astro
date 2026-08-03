@@ -1,0 +1,292 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { SITE } from "../config/theme.config.ts";
+
+const galleryPhotos = [
+  {
+    id: 1,
+    src: "/images/gallery/photo1.webp",
+    title: "P‡TCH Live Performance",
+    caption: "Live stage performance capture.",
+  },
+  {
+    id: 2,
+    src: "/images/gallery/photo2.webp",
+    title: "Stage Session",
+    caption: "Concert session spotlight.",
+  },
+  {
+    id: 3,
+    src: "/images/gallery/photo3.webp",
+    title: "Band Live Action",
+    caption: "Melodic rock energy on stage.",
+  },
+  {
+    id: 4,
+    src: "/images/gallery/photo4.webp",
+    title: "Concert Capture",
+    caption: "P‡TCH live concert atmosphere.",
+  },
+  {
+    id: 5,
+    src: "/images/band/patch-hero-banner.webp",
+    title: "P‡TCH Band Lineup",
+    caption: "Full band stage banner.",
+  },
+  {
+    id: 6,
+    src: "/images/band/Soren-vocals-rythm-guitar.webp",
+    title: "Soren",
+    caption: "Vocals & Rhythm Guitar.",
+  },
+  {
+    id: 7,
+    src: "/images/band/erik-lead-guitar.webp",
+    title: "Erik",
+    caption: "Lead Guitar on stage.",
+  },
+  {
+    id: 8,
+    src: "/images/band/Lou-bass-guitar.webp",
+    title: "Lou",
+    caption: "Bass Guitar performance.",
+  },
+  {
+    id: 9,
+    src: "/images/band/Marty-Drums.webp",
+    title: "Marty",
+    caption: "Drums & Percussion live beat.",
+  },
+];
+---
+
+<BaseLayout
+  title={`Photo Gallery - ${SITE.name}`}
+  description="High resolution photo gallery and concert slideshow for P‡TCH."
+  canonical="/gallery"
+>
+  <div class="mx-auto max-w-6xl px-5 pt-8 sm:pt-12 pb-16">
+    <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Photo Gallery" }]} />
+
+    <header class="mt-6 border-b border-border/60 pb-8 sm:pb-10">
+      <span class="text-xs font-medium uppercase tracking-[0.2em] text-primary">Photos</span>
+      <h1 class="mt-2 font-serif text-4xl font-semibold sm:text-6xl">Photo Gallery</h1>
+      <p class="mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-muted-foreground">
+        Browse live stage captures, band member portraits, and behind-the-scenes photography.
+      </p>
+    </header>
+
+    <!-- Slideshow Component -->
+    <div class="mt-8 sm:mt-12" data-gallery-slideshow>
+      <!-- Main Slide Display -->
+      <div class="relative overflow-hidden rounded-2xl border border-border/60 bg-neutral-950 shadow-2xl group">
+        <!-- Top Animated Auto-Play Progress Bar -->
+        <div class="absolute top-0 inset-x-0 z-30 h-1 bg-white/10">
+          <div data-progress-bar class="h-full w-0 bg-primary transition-all duration-100 ease-linear"></div>
+        </div>
+
+        <div class="relative h-[50vh] min-h-[380px] max-h-[620px] w-full overflow-hidden flex items-center justify-center bg-black">
+          {
+            galleryPhotos.map((photo, index) => (
+              <div
+                data-slide={index}
+                class={`absolute inset-0 h-full w-full transition-all duration-700 ease-in-out flex items-center justify-center ${index === 0 ? "opacity-100 scale-100 z-10" : "opacity-0 scale-95 z-0 pointer-events-none"}`}
+              >
+                <!-- Ambient Blurred Background (fills letterbox seamlessly) -->
+                <img
+                  src={photo.src}
+                  alt=""
+                  aria-hidden="true"
+                  class="absolute inset-0 h-full w-full object-cover blur-2xl opacity-40 scale-110 pointer-events-none transition-opacity duration-700"
+                />
+
+                <!-- Main Photo: Always 100% visible, uncropped -->
+                <img
+                  src={photo.src}
+                  alt={photo.title}
+                  class="relative z-10 max-h-full max-w-full object-contain p-2 sm:p-6 drop-shadow-2xl transition-transform duration-700"
+                />
+
+                <!-- Caption Overlay -->
+                <div class="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-4 sm:p-6 text-white pointer-events-none">
+                  <span class="text-[10px] sm:text-xs font-mono uppercase tracking-widest text-primary-foreground/80">
+                    Photo {index + 1} of {galleryPhotos.length}
+                  </span>
+                  <h2 class="font-serif text-xl sm:text-2xl font-semibold mt-0.5 sm:mt-1">{photo.title}</h2>
+                  <p class="text-xs sm:text-sm text-white/80">{photo.caption}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- Prev / Next Controls -->
+        <button
+          type="button"
+          data-slide-prev
+          aria-label="Previous photo"
+          class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md transition-all hover:bg-black/90 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          data-slide-next
+          aria-label="Next photo"
+          class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 inline-flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-md transition-all hover:bg-black/90 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary"
+        >
+          <svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Thumbnail Navigation Row -->
+      <div data-thumb-container class="mt-4 sm:mt-6 flex overflow-x-auto pb-2 flex-nowrap sm:flex-wrap gap-2.5 sm:gap-3 justify-start sm:justify-center">
+        {
+          galleryPhotos.map((photo, index) => (
+            <button
+              type="button"
+              data-thumb={index}
+              aria-label={`Jump to photo ${index + 1}`}
+              class={`group relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-lg border-2 bg-neutral-900 transition-all ${index === 0 ? "border-primary scale-105" : "border-border/60 opacity-60 hover:opacity-100"}`}
+            >
+              <img
+                src={photo.src}
+                alt={photo.title}
+                class="h-full w-full object-cover transition-transform group-hover:scale-110"
+              />
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const slideshow = document.querySelector("[data-gallery-slideshow]");
+  if (slideshow) {
+    const slides = [...slideshow.querySelectorAll("[data-slide]")];
+    const thumbs = [...slideshow.querySelectorAll("[data-thumb]")];
+    const prevBtn = slideshow.querySelector("[data-slide-prev]");
+    const nextBtn = slideshow.querySelector("[data-slide-next]");
+    const progressBar = slideshow.querySelector("[data-progress-bar]") as HTMLElement;
+
+    let currentIndex = 0;
+    let autoPlayTimer: any = null;
+    let progressTimer: any = null;
+    const SLIDE_DURATION = 5000; // 5 seconds per slide
+    const PROGRESS_INTERVAL = 50;
+
+    const startProgress = () => {
+      if (!progressBar) return;
+      let elapsedTime = 0;
+      progressBar.style.width = "0%";
+      clearInterval(progressTimer);
+
+      progressTimer = setInterval(() => {
+        elapsedTime += PROGRESS_INTERVAL;
+        const percentage = Math.min(100, (elapsedTime / SLIDE_DURATION) * 100);
+        progressBar.style.width = `${percentage}%`;
+        if (elapsedTime >= SLIDE_DURATION) {
+          clearInterval(progressTimer);
+        }
+      }, PROGRESS_INTERVAL);
+    };
+
+    const updateSlide = (nextIndex: number) => {
+      slides[currentIndex].classList.remove("opacity-100", "scale-100", "z-10");
+      slides[currentIndex].classList.add("opacity-0", "scale-95", "z-0", "pointer-events-none");
+
+      thumbs[currentIndex].classList.remove("border-primary", "scale-105");
+      thumbs[currentIndex].classList.add("border-border/60", "opacity-60");
+
+      currentIndex = (nextIndex + slides.length) % slides.length;
+
+      slides[currentIndex].classList.remove("opacity-0", "scale-95", "z-0", "pointer-events-none");
+      slides[currentIndex].classList.add("opacity-100", "scale-100", "z-10");
+
+      thumbs[currentIndex].classList.remove("border-border/60", "opacity-60");
+      thumbs[currentIndex].classList.add("border-primary", "scale-105");
+
+      // Auto scroll active thumbnail into view
+      thumbs[currentIndex].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+
+      startProgress();
+    };
+
+    const resetAutoPlay = () => {
+      clearInterval(autoPlayTimer);
+      startProgress();
+      autoPlayTimer = setInterval(() => {
+        updateSlide(currentIndex + 1);
+      }, SLIDE_DURATION);
+    };
+
+    prevBtn?.addEventListener("click", () => {
+      updateSlide(currentIndex - 1);
+      resetAutoPlay();
+    });
+
+    nextBtn?.addEventListener("click", () => {
+      updateSlide(currentIndex + 1);
+      resetAutoPlay();
+    });
+
+    thumbs.forEach((thumb, idx) => {
+      thumb.addEventListener("click", () => {
+        updateSlide(idx);
+        resetAutoPlay();
+      });
+    });
+
+    // Pause on hover
+    slideshow.addEventListener("mouseenter", () => {
+      clearInterval(autoPlayTimer);
+      clearInterval(progressTimer);
+    });
+
+    slideshow.addEventListener("mouseleave", () => {
+      resetAutoPlay();
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") {
+        updateSlide(currentIndex - 1);
+        resetAutoPlay();
+      }
+      if (e.key === "ArrowRight") {
+        updateSlide(currentIndex + 1);
+        resetAutoPlay();
+      }
+    });
+
+    // Touch swipe support for mobile devices
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    slideshow.addEventListener("touchstart", (e: any) => {
+      touchStartX = e.changedTouches[0].screenX;
+      clearInterval(autoPlayTimer);
+      clearInterval(progressTimer);
+    }, { passive: true });
+
+    slideshow.addEventListener("touchend", (e: any) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchStartX - touchEndX > 50) {
+        updateSlide(currentIndex + 1);
+      } else if (touchEndX - touchStartX > 50) {
+        updateSlide(currentIndex - 1);
+      }
+      resetAutoPlay();
+    }, { passive: true });
+
+    // Start initial autoplay
+    resetAutoPlay();
+  }
+</script>

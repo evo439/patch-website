@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Shows from "../components/Shows.astro";
+import { SITE } from "../config/theme.config.ts";
+---
+
+<BaseLayout
+  title={`Tour Dates & Live Shows - ${SITE.name}`}
+  description="Upcoming tour dates, festival appearances, and live performance archive for P‡TCH."
+  canonical="/shows"
+>
+  <div class="mx-auto max-w-6xl px-5 pt-12 pb-6">
+    <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Shows" }]} />
+
+    <header class="mt-6 border-b border-border/60 pb-10">
+      <span class="text-xs font-medium uppercase tracking-[0.2em] text-primary">On Tour</span>
+      <h1 class="mt-2 font-serif text-5xl font-semibold sm:text-6xl">Live & Shows</h1>
+      <p class="mt-4 max-w-2xl text-lg text-muted-foreground">
+        Experience P‡TCH live on stage. Explore upcoming tour dates and look back at past concert appearances across the Netherlands and Europe.
+      </p>
+    </header>
+  </div>
+
+  <Shows
+    showUpcomingOnly
+    title="Upcoming Tour Dates"
+    subtitle="Secure your tickets for our upcoming performances."
+  />
+
+  <Shows
+    showPastOnly
+    title="Past Concerts & Archive"
+    subtitle="Previous performances and venue archives."
+  />
+</BaseLayout>

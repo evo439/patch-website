@@ -1,0 +1,26 @@
+media:
+  input: public/images
+  output: /images
+
+collections:
+  - label: "Shows & Concerts"
+    name: shows
+    folder: src/content/shows
+    type: file
+    format: json
+    fields:
+      - { label: "Date (YYYY-MM-DD)", name: datum, type: date }
+      - { label: "Venue / Festival", name: locatie, type: string }
+      - { label: "City & Country", name: stad, type: string }
+      - { label: "Ticket Link", name: ticketUrl, type: string }
+
+  - label: "Band Info & Socials"
+    name: settings
+    folder: src/content/settings
+    type: file
+    format: json
+    fields:
+      - { label: "Biography", name: bio, type: rich-text }
+      - { label: "Contact E-mail", name: contactEmail, type: string }
+      - { label: "Instagram URL", name: instagramUrl, type: string }
+      - { label: "Spotify URL", name: spotifyUrl, type: string }

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ptch.site/sitemap.xml

@@ -1,0 +1,126 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+  title?: string;
+  subtitle?: string;
+  limit?: number;
+  showPastOnly?: boolean;
+  showUpcomingOnly?: boolean;
+}
+
+const {
+  title = "Live Shows",
+  subtitle = "Catch P‡TCH performing live at upcoming venues and festivals.",
+  limit,
+  showPastOnly = false,
+  showUpcomingOnly = false,
+} = Astro.props;
+
+const allShows = await getCollection("shows");
+
+const today = new Date().toISOString().slice(0, 10);
+
+let filteredShows = allShows.filter((show) => {
+  const isPast = show.data.datum < today;
+  if (showPastOnly) return isPast;
+  if (showUpcomingOnly) return !isPast;
+  return true;
+});
+
+// Sort upcoming shows ascending (earliest first), past shows descending (latest past show first)
+filteredShows.sort((a, b) => {
+  if (showPastOnly) {
+    return new Date(b.data.datum).getTime() - new Date(a.data.datum).getTime();
+  }
+  return new Date(a.data.datum).getTime() - new Date(b.data.datum).getTime();
+});
+
+if (limit) {
+  filteredShows = filteredShows.slice(0, limit);
+}
+
+function formatDate(dateStr: string) {
+  if (!dateStr) return "";
+  const [year, month, day] = dateStr.split("-");
+  if (year && month && day) {
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  }
+  return dateStr;
+}
+---
+
+<section class="border-b border-border/60 py-16" id="shows">
+  <div class="mx-auto max-w-6xl px-5">
+    <div class="mb-8 flex items-center justify-between">
+      <div>
+        <span class="text-xs font-medium uppercase tracking-wider text-primary">Live</span>
+        <h2 class="mt-1 font-serif text-3xl font-semibold sm:text-4xl">{title}</h2>
+        {subtitle && <p class="mt-2 text-sm text-muted-foreground">{subtitle}</p>}
+      </div>
+    </div>
+
+    {
+      filteredShows.length === 0 ? (
+        <p class="py-8 text-center text-muted-foreground border border-dashed border-border/60 rounded-lg">
+          No shows listed in this section at the moment. Check back soon for tour updates!
+        </p>
+      ) : (
+        <div class="divide-y divide-border/60 border-t border-b border-border/60">
+          {filteredShows.map((show) => {
+            const { datum, locatie, stad, ticketUrl } = show.data;
+            const isPast = datum < today;
+            return (
+              <div class="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-8">
+                  <time datetime={datum} class="w-36 text-sm font-semibold tracking-wide text-muted-foreground">
+                    {formatDate(datum)}
+                  </time>
+                  <div>
+                    <h3 class="font-serif text-xl font-semibold text-foreground">{locatie}</h3>
+                    <p class="text-sm text-muted-foreground">{stad}</p>
+                  </div>
+                </div>
+                <div>
+                  {ticketUrl && !isPast ? (
+                    <a
+                      href={ticketUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-flex items-center gap-1.5 rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
+                    >
+                      Get Tickets
+                      <svg
+                        class="h-3.5 w-3.5"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M14 5l7 7m0 0l-7 7m7-7H3"
+                        />
+                      </svg>
+                    </a>
+                  ) : (
+                    <span class="inline-flex items-center rounded-md border border-border/60 px-3 py-1.5 text-xs font-medium text-muted-foreground bg-muted/30">
+                      {isPast ? "Show Passed" : "Tickets at Door / Free"}
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )
+    }
+  </div>
+</section>

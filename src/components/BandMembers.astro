@@ -1,0 +1,263 @@
+---
+const members = [
+  {
+    id: "soren",
+    name: "Soren",
+    role: "Vocals & Rhythm Guitar",
+    image: "/images/band/Soren-vocals-rythm-guitar.webp",
+    modalImage: "/images/band/Soren-vocals-rythm-guitar-modal-window.webp",
+    bio: "Soren delivers the raw, driving voice and distinctive rhythm guitar lines that define P‡TCH's melodic rock identity. With years of songwriting experience across European stages, Soren's passionate vocal delivery and expressive lyrics anchor the band's signature sound.",
+    details: ["Vocals & Rhythm Guitar", "Songwriter", "Based in Netherlands"],
+  },
+  {
+    id: "erik",
+    name: "Erik",
+    role: "Lead Guitar",
+    image: "/images/band/erik-lead-guitar.webp",
+    modalImage: "/images/band/erik-lead-guitar-modal-window.webp",
+    bio: "Erik crafts the sharp, distinguishing guitar riffs and soaring solos that elevate P‡TCH. A seasoned guitarist, Erik seamlessly blends classic rock intensity with modern melodic arrangements.",
+    details: ["Lead Guitar", "Arranger", "Based in Netherlands"],
+  },
+  {
+    id: "lou",
+    name: "Lou",
+    role: "Bass Guitar",
+    image: "/images/band/Lou-bass-guitar.webp",
+    modalImage: "/images/band/Lou-bass-guitar-modal-window.webp",
+    bio: "Lou provides the groove-heavy, driving basslines that give P‡TCH its powerful dynamic foundation. Bringing tight precision and live stage energy, Lou's bass work weaves fluidly into every track.",
+    details: ["Bass Guitar", "Groove & Harmony", "Based in Netherlands"],
+  },
+  {
+    id: "marty",
+    name: "Marty",
+    role: "Drums & Percussion",
+    image: "/images/band/Marty-Drums.webp",
+    modalImage: "/images/band/Marty-Drums-modal-window.webp",
+    bio: "Marty commands the rhythm section behind the drum kit. Known for explosive dynamic control, rock-solid timing, and relentless drive, Marty keeps the heartbeat of P‡TCH pounding loud and clear.",
+    details: ["Drums & Percussion", "Rhythm Engine", "Based in Netherlands"],
+  },
+];
+---
+
+<section class="border-b border-border/60 py-20" id="band-members">
+  <div class="mx-auto max-w-6xl px-5">
+    <div class="mb-12 text-center">
+      <span class="text-xs font-medium uppercase tracking-[0.2em] text-primary">Lineup</span>
+      <h2 class="mt-2 font-serif text-4xl font-semibold sm:text-5xl">We are P‡TCH</h2>
+      <p class="mx-auto mt-4 max-w-2xl text-muted-foreground">
+        Click on any member to learn more about their musical background and role in the project.
+      </p>
+    </div>
+
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        members.map((member) => (
+          <button
+            type="button"
+            data-member-btn={member.id}
+            aria-haspopup="dialog"
+            aria-controls={`modal-${member.id}`}
+            class="group relative text-left overflow-hidden rounded-xl border border-border/60 bg-muted/30 transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 cursor-pointer"
+          >
+            <div class="aspect-[3/4] w-full overflow-hidden bg-neutral-900">
+              <img
+                src={member.image}
+                alt={member.name}
+                loading="lazy"
+                class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+            <div class="p-5">
+              <h3 class="font-serif text-2xl font-semibold group-hover:text-primary transition-colors">
+                {member.name}
+              </h3>
+              <p class="mt-1 text-sm font-medium text-muted-foreground">{member.role}</p>
+              <div class="mt-4 flex items-center text-xs font-medium text-primary">
+                <span>View Bio &rarr;</span>
+              </div>
+            </div>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Modal Overlays -->
+  {
+    members.map((member, index) => (
+      <dialog
+        id={`modal-${member.id}`}
+        data-member-modal={member.id}
+        data-member-index={index}
+        tabindex="-1"
+        class="backdrop:bg-black/75 fixed inset-0 z-50 m-auto max-h-[90vh] max-w-xl w-[90vw] overflow-y-auto rounded-2xl border border-border bg-background p-0 text-foreground shadow-2xl transition-all focus:outline-none"
+        aria-labelledby={`title-${member.id}`}
+        aria-describedby={`desc-${member.id}`}
+      >
+        <div class="relative p-6 sm:p-8">
+          <button
+            type="button"
+            data-modal-close={member.id}
+            aria-label="Close dialog"
+            class="absolute top-4 right-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-muted text-muted-foreground hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+          >
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <div class="flex flex-col gap-6 sm:flex-row sm:items-start">
+            <img
+              src={member.modalImage}
+              alt={member.name}
+              class="h-40 w-40 sm:h-48 sm:w-48 rounded-xl object-cover aspect-square shadow-md mx-auto sm:mx-0 shrink-0"
+            />
+            <div class="flex-1">
+              <span class="text-xs font-medium uppercase tracking-wider text-primary">Band Member</span>
+              <h3 id={`title-${member.id}`} class="font-serif text-3xl font-bold mt-1">
+                {member.name}
+              </h3>
+              <p class="text-sm font-semibold text-muted-foreground">{member.role}</p>
+
+              <div class="mt-4 flex flex-wrap gap-2">
+                {member.details.map((detail) => (
+                  <span class="rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground">
+                    {detail}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div id={`desc-${member.id}`} class="mt-6 border-t border-border/60 pt-6">
+            <h4 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">About {member.name}</h4>
+            <p class="mt-2 text-base leading-relaxed text-foreground/90">{member.bio}</p>
+          </div>
+
+          <!-- Previous / Next Member Navigation Footer -->
+          <div class="mt-8 flex items-center justify-between border-t border-border/60 pt-5">
+            <button
+              type="button"
+              data-modal-prev={index}
+              aria-label="Previous member"
+              class="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-muted/60 px-4 py-2 text-xs font-semibold text-foreground hover:bg-foreground hover:text-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+            >
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
+              Previous
+            </button>
+
+            <span class="text-xs font-mono text-muted-foreground">
+              {index + 1} / {members.length}
+            </span>
+
+            <button
+              type="button"
+              data-modal-next={index}
+              aria-label="Next member"
+              class="inline-flex items-center gap-2 rounded-lg border border-border/60 bg-muted/60 px-4 py-2 text-xs font-semibold text-foreground hover:bg-foreground hover:text-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+            >
+              Next
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </dialog>
+    ))
+  }
+</section>
+
+<script>
+  const memberDialogs = [...document.querySelectorAll("[data-member-modal]")] as HTMLDialogElement[];
+  const triggerBtns = [...document.querySelectorAll("[data-member-btn]")];
+  let activeIndex = -1;
+  let lastTrigger: HTMLElement | null = null;
+
+  const openMemberModal = (index: number) => {
+    // 1. Close ALL currently open dialogs cleanly
+    memberDialogs.forEach((dialog) => {
+      if (dialog.open) {
+        dialog.close();
+      }
+    });
+
+    // 2. Calculate target index
+    activeIndex = (index + memberDialogs.length) % memberDialogs.length;
+    const targetModal = memberDialogs[activeIndex];
+    if (targetModal) {
+      targetModal.showModal();
+      // 3. Focus the dialog container itself instead of highlighting buttons
+      targetModal.focus();
+    }
+  };
+
+  triggerBtns.forEach((btn, idx) => {
+    btn.addEventListener("click", () => {
+      lastTrigger = btn as HTMLElement;
+      openMemberModal(idx);
+    });
+  });
+
+  memberDialogs.forEach((dialog) => {
+    // Close button
+    dialog.querySelectorAll("[data-modal-close]").forEach((closeBtn) => {
+      closeBtn.addEventListener("click", () => {
+        dialog.close();
+        activeIndex = -1;
+        lastTrigger?.focus();
+      });
+    });
+
+    // Previous member button
+    dialog.querySelectorAll("[data-modal-prev]").forEach((prevBtn) => {
+      prevBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const currentIdx = Number(prevBtn.getAttribute("data-modal-prev"));
+        openMemberModal(currentIdx - 1);
+      });
+    });
+
+    // Next member button
+    dialog.querySelectorAll("[data-modal-next]").forEach((nextBtn) => {
+      nextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const currentIdx = Number(nextBtn.getAttribute("data-modal-next"));
+        openMemberModal(currentIdx + 1);
+      });
+    });
+
+    // Close on backdrop click
+    dialog.addEventListener("click", (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const isInDialog =
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width;
+      if (!isInDialog) {
+        dialog.close();
+        activeIndex = -1;
+        lastTrigger?.focus();
+      }
+    });
+  });
+
+  // Global arrow key navigation when modal is open
+  document.addEventListener("keydown", (e) => {
+    const openDialog = memberDialogs.find((d) => d.open);
+    if (!openDialog) return;
+
+    const currentIdx = Number(openDialog.getAttribute("data-member-index"));
+
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      openMemberModal(currentIdx + 1);
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      openMemberModal(currentIdx - 1);
+    }
+  });
+</script>
