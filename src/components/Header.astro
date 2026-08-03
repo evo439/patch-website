@@ -104,6 +104,15 @@ const allNavItems = pagesList.length > 0
 </header>
 
 <script>
+  // Dark mode theme toggle logic
+  const themeToggle = document.getElementById("theme-toggle");
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
+  }
+
   // Mobile menu toggle logic
   const trigger = document.getElementById("mobile-menu-trigger");
   const menu = document.getElementById("mobile-menu");
