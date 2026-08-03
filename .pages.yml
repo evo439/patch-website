@@ -2,25 +2,29 @@ media:
   input: public/images
   output: /images
 
-collections:
-  - label: "Shows & Concerts"
-    name: shows
-    folder: src/content/shows
-    type: file
+content:
+  - name: shows
+    label: "Shows & Concerts"
+    type: collection
+    path: src/content/shows
+    filename: "{fields.datum}-{fields.locatie}"
+    extension: json
     format: json
     fields:
-      - { label: "Date (YYYY-MM-DD)", name: datum, type: date }
-      - { label: "Venue / Festival", name: locatie, type: string }
-      - { label: "City & Country", name: stad, type: string }
-      - { label: "Ticket Link", name: ticketUrl, type: string }
+      - { name: "datum", label: "Date (YYYY-MM-DD)", type: "date" }
+      - { name: "locatie", label: "Venue / Festival Name", type: "string" }
+      - { name: "stad", label: "City & Country", type: "string" }
+      - { name: "ticketUrl", label: "Ticket or Info Link", type: "string" }
 
-  - label: "Band Info & Socials"
-    name: settings
-    folder: src/content/settings
-    type: file
+  - name: settings
+    label: "Band Settings"
+    type: collection
+    path: src/content/settings
+    filename: "general"
+    extension: json
     format: json
     fields:
-      - { label: "Biography", name: bio, type: rich-text }
-      - { label: "Contact E-mail", name: contactEmail, type: string }
-      - { label: "Instagram URL", name: instagramUrl, type: string }
-      - { label: "Spotify URL", name: spotifyUrl, type: string }
+      - { name: "bio", label: "Band Biography", type: "rich-text" }
+      - { name: "contactEmail", label: "Contact E-mail", type: "string" }
+      - { name: "instagramUrl", label: "Instagram URL", type: "string" }
+      - { name: "spotifyUrl", label: "Spotify URL", type: "string" }
