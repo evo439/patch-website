@@ -11,6 +11,7 @@ const shows = defineCollection({
     datum: z.string(),
     locatie: z.string(),
     stad: z.string(),
+    afbeelding: z.string().optional(),
     ticketUrl: z.string().optional(),
   }),
 });

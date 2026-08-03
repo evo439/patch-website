@@ -7,20 +7,21 @@ content:
     label: "Shows & Concerts"
     type: collection
     path: src/content/shows
-    filename: "{fields.datum}-{fields.locatie}"
+    filename: "{fields.datum}-{fields.locatie}.json"
     extension: json
     format: json
     fields:
       - { name: "datum", label: "Date (YYYY-MM-DD)", type: "date" }
       - { name: "locatie", label: "Venue / Festival Name", type: "string" }
       - { name: "stad", label: "City & Country", type: "string" }
+      - { name: "afbeelding", label: "Show Poster / Flyer (1x1 Square Image)", type: "image" }
       - { name: "ticketUrl", label: "Ticket or Info Link", type: "string" }
 
   - name: pages
     label: "Pages & Content"
     type: collection
     path: src/content/pages
-    filename: "{slug}"
+    filename: "{slug}.json"
     extension: json
     format: json
     fields:

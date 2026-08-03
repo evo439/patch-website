@@ -73,11 +73,19 @@ function formatDate(dateStr: string) {
       ) : (
         <div class="divide-y divide-border/60 border-t border-b border-border/60">
           {filteredShows.map((show) => {
-            const { datum, locatie, stad, ticketUrl } = show.data;
+            const { datum, locatie, stad, afbeelding, ticketUrl } = show.data;
             const isPast = datum < today;
             return (
               <div class="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
-                <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-8">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+                  {afbeelding && (
+                    <img
+                      src={afbeelding}
+                      alt={`${locatie} poster`}
+                      class="h-16 w-16 rounded-lg object-cover aspect-square border border-border/60 shadow-sm flex-shrink-0"
+                      loading="lazy"
+                    />
+                  )}
                   <time datetime={datum} class="w-36 text-sm font-semibold tracking-wide text-muted-foreground">
                     {formatDate(datum)}
                   </time>
