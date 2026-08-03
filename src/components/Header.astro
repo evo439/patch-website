@@ -16,25 +16,22 @@ const iconClass = isHome
   ? "home-header-action inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors"
   : "inline-flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground";
 
-// Dynamic custom pages from CMS
-let customPages = [];
+let pagesList = [];
 try {
-  customPages = await getCollection("pages");
+  pagesList = await getCollection("pages");
 } catch {
-  customPages = [];
+  pagesList = [];
 }
 
-const RESERVED_SLUGS = ["home", "shows", "music", "gallery", "contact"];
-
-const dynamicNavItems = customPages
-  .filter((page) => page.data?.showInNav && !RESERVED_SLUGS.includes(page.id))
-  .sort((a, b) => (a.data.navOrder ?? 10) - (b.data.navOrder ?? 10))
-  .map((page) => ({
-    label: page.data.title,
-    to: `/${page.id}`,
-  }));
-
-const allNavItems = [...NAVIGATION, ...dynamicNavItems];
+const allNavItems = pagesList.length > 0
+  ? pagesList
+      .filter((page) => page.data?.showInNav !== false)
+      .sort((a, b) => (a.data.navOrder ?? 10) - (b.data.navOrder ?? 10))
+      .map((page) => ({
+        label: page.id === "home" && page.data.title === "P‡TCH" ? "Home" : page.data.title,
+        to: page.id === "home" ? "/" : `/${page.id}`,
+      }))
+  : NAVIGATION;
 ---
 
 <header class={headerClass} data-home-header={isHome ? "true" : undefined} data-scrolled="false">
@@ -46,13 +43,13 @@ const allNavItems = [...NAVIGATION, ...dynamicNavItems];
     <nav class="hidden items-center gap-8 md:flex" aria-label="Primary navigation">
       {
         allNavItems.map((item) => {
-          const exact = item.to === "/";
-          const active = exact ? current === "/" : current.startsWith(item.to);
+          const isActive = current === item.to || (item.to !== "/" && current.startsWith(item.to));
           return (
             <a
               href={item.to}
-              class={`text-sm ${active ? activeClass : inactiveClass}`}
-              aria-current={active ? "page" : undefined}
+              class={`text-sm font-medium transition-colors ${
+                isActive ? activeClass : inactiveClass
+              }`}
             >
               {item.label}
             </a>
@@ -61,41 +58,47 @@ const allNavItems = [...NAVIGATION, ...dynamicNavItems];
       }
     </nav>
 
-    <div class="flex items-center gap-1.5">
+    <div class="flex items-center gap-2">
+      <!-- Dark mode toggle -->
       <button
+        id="theme-toggle"
         type="button"
-        data-theme-toggle
-        aria-label="Toggle dark mode"
         class={iconClass}
+        aria-label="Toggle dark mode"
       >
-        <span data-theme-icon="moon"><Icon name="moon" class="h-4 w-4" /></span>
-        <span data-theme-icon="sun" hidden><Icon name="sun" class="h-4 w-4" /></span>
+        <Icon name="sun" class="h-4 w-4 hidden dark:block" />
+        <Icon name="moon" class="h-4 w-4 block dark:hidden" />
       </button>
+
+      <!-- Mobile drawer menu trigger -->
       <button
+        id="mobile-menu-trigger"
         type="button"
-        data-menu-toggle
-        aria-label="Menu"
-        aria-controls="mobile-menu"
+        class={`md:hidden ${iconClass}`}
+        aria-label="Toggle mobile menu"
         aria-expanded="false"
-        class={`${iconClass} md:hidden`}
+        aria-controls="mobile-menu"
       >
-        <span data-menu-icon="menu"><Icon name="menu" class="h-5 w-5" /></span>
-        <span data-menu-icon="x" hidden><Icon name="x" class="h-5 w-5" /></span>
+        <Icon name="menu" class="h-5 w-5" />
       </button>
     </div>
   </div>
 
-  <div id="mobile-menu" data-menu-panel class="border-t border-border/60 bg-background text-foreground shadow-xl md:hidden" hidden>
-    <nav class="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-4" aria-label="Mobile navigation">
+  <!-- Mobile Menu Drawer -->
+  <div
+    id="mobile-menu"
+    class="fixed inset-x-0 top-16 hidden border-b border-border/60 bg-background/95 p-6 backdrop-blur-lg md:hidden shadow-xl"
+  >
+    <nav class="flex flex-col space-y-4" aria-label="Mobile navigation">
       {
         allNavItems.map((item) => {
-          const exact = item.to === "/";
-          const active = exact ? current === "/" : current.startsWith(item.to);
+          const isActive = current === item.to || (item.to !== "/" && current.startsWith(item.to));
           return (
             <a
               href={item.to}
-              class={`rounded-lg px-4 py-3 text-base font-medium transition-colors hover:bg-muted hover:text-foreground ${active ? "bg-primary/10 text-primary font-semibold" : "text-foreground/80"}`}
-              aria-current={active ? "page" : undefined}
+              class={`text-lg font-medium transition-colors ${
+                isActive ? "text-primary font-semibold" : "text-muted-foreground hover:text-foreground"
+              }`}
             >
               {item.label}
             </a>
@@ -107,59 +110,31 @@ const allNavItems = [...NAVIGATION, ...dynamicNavItems];
 </header>
 
 <script>
-  const menuToggle = document.querySelector("[data-menu-toggle]");
-  const menuPanel = document.querySelector("[data-menu-panel]");
-  const menuIcon = document.querySelector('[data-menu-icon="menu"]');
-  const closeIcon = document.querySelector('[data-menu-icon="x"]');
-  const themeToggle = document.querySelector("[data-theme-toggle]");
-  const moonIcon = document.querySelector('[data-theme-icon="moon"]');
-  const sunIcon = document.querySelector('[data-theme-icon="sun"]');
-  const homeHeader = document.querySelector("[data-home-header]");
+  // Mobile menu toggle logic
+  const trigger = document.getElementById("mobile-menu-trigger");
+  const menu = document.getElementById("mobile-menu");
 
-  const setPanelOpen = () => {
-    if (!homeHeader) return;
-    const open = !menuPanel.hidden;
-    homeHeader.dataset.panelOpen = String(open);
-  };
+  if (trigger && menu) {
+    trigger.addEventListener("click", () => {
+      const isExpanded = trigger.getAttribute("aria-expanded") === "true";
+      trigger.setAttribute("aria-expanded", (!isExpanded).toString());
+      menu.classList.toggle("hidden");
+    });
+  }
 
-  const setMenu = (open) => {
-    menuPanel.hidden = !open;
-    menuIcon.hidden = open;
-    closeIcon.hidden = !open;
-    menuToggle?.setAttribute("aria-expanded", String(open));
-    setPanelOpen();
-  };
-
-  const setThemeIcon = () => {
-    const dark = document.documentElement.classList.contains("dark");
-    moonIcon.hidden = dark;
-    sunIcon.hidden = !dark;
-  };
-
-  setThemeIcon();
-
-  const setHeaderScrolled = () => {
-    if (!homeHeader) return;
-    homeHeader.dataset.scrolled = window.scrollY > 8 ? "true" : "false";
-  };
-  setHeaderScrolled();
-  window.addEventListener("scroll", setHeaderScrolled, { passive: true });
-
-  menuToggle?.addEventListener("click", () => setMenu(menuPanel.hidden));
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-
-    if (!menuPanel.hidden) {
-      setMenu(false);
-      menuToggle?.focus();
-    }
-  });
-
-  themeToggle?.addEventListener("click", () => {
-    const next = !document.documentElement.classList.contains("dark");
-    document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("theme", next ? "dark" : "light");
-    setThemeIcon();
-  });
+  // Header scroll backdrop effect for transparent hero header
+  const header = document.querySelector('[data-home-header="true"]');
+  if (header) {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        header.classList.remove("bg-transparent", "border-transparent", "text-white");
+        header.classList.add("bg-background/90", "border-border/60", "text-foreground", "backdrop-blur-md");
+      } else {
+        header.classList.add("bg-transparent", "border-transparent", "text-white");
+        header.classList.remove("bg-background/90", "border-border/60", "text-foreground", "backdrop-blur-md");
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+  }
 </script>
