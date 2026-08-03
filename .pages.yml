@@ -6,9 +6,7 @@ content:
   - name: shows
     label: "Shows & Concerts"
     type: collection
-    path: src/content/shows
-    filename: "{fields.datum}-{fields.locatie}.json"
-    extension: json
+    path: src/content/shows/{slug}.json
     format: json
     fields:
       - { name: "datum", label: "Date (YYYY-MM-DD)", type: "date" }
@@ -20,9 +18,7 @@ content:
   - name: pages
     label: "Pages & Content"
     type: collection
-    path: src/content/pages
-    filename: "{slug}.json"
-    extension: json
+    path: src/content/pages/{slug}.json
     format: json
     fields:
       - { name: "title", label: "Page Title", type: "string" }
