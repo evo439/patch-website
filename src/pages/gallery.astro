@@ -59,21 +59,32 @@ const galleryPhotos = [
     caption: "Drums & Percussion live beat.",
   },
 ];
+import { getCollection } from "astro:content";
+
+let pageData = null;
+try {
+  const pages = await getCollection("pages");
+  pageData = pages.find((p) => p.id === "gallery")?.data;
+} catch {}
+
+const title = pageData?.title || "Photo Gallery";
+const subtitle = pageData?.subtitle || "Browse live stage captures, band member portraits, and behind-the-scenes photography.";
+const description = pageData?.description || "High resolution photo gallery and concert slideshow for P‡TCH.";
 ---
 
 <BaseLayout
-  title={`Photo Gallery - ${SITE.name}`}
-  description="High resolution photo gallery and concert slideshow for P‡TCH."
+  title={`${title} - ${SITE.name}`}
+  description={description}
   canonical="/gallery"
 >
   <div class="mx-auto max-w-6xl px-5 pt-8 sm:pt-12 pb-16">
-    <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: "Photo Gallery" }]} />
+    <Breadcrumbs items={[{ label: "Home", to: "/" }, { label: title }]} />
 
     <header class="mt-6 border-b border-border/60 pb-8 sm:pb-10">
       <span class="text-xs font-medium uppercase tracking-[0.2em] text-primary">Photos</span>
-      <h1 class="mt-2 font-serif text-4xl font-semibold sm:text-6xl">Photo Gallery</h1>
+      <h1 class="mt-2 font-serif text-4xl font-semibold sm:text-6xl">{title}</h1>
       <p class="mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-muted-foreground">
-        Browse live stage captures, band member portraits, and behind-the-scenes photography.
+        {subtitle}
       </p>
     </header>
 

@@ -18,11 +18,14 @@ export async function GET() {
   } catch {
     customPages = [];
   }
-  const customEntries = customPages.map((page) => ({
-    path: `/${page.id}`,
-    changefreq: "monthly",
-    priority: "0.7",
-  }));
+  const RESERVED_SLUGS = ["home", "shows", "music", "gallery", "contact"];
+  const customEntries = customPages
+    .filter((page) => !RESERVED_SLUGS.includes(page.id))
+    .map((page) => ({
+      path: `/${page.id}`,
+      changefreq: "monthly",
+      priority: "0.7",
+    }));
 
   const entries = [...staticEntries, ...customEntries];
 

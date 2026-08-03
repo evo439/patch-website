@@ -5,8 +5,10 @@ import Breadcrumbs from "../components/Breadcrumbs.astro";
 import { SITE } from "../config/theme.config.ts";
 
 export async function getStaticPaths() {
+  const RESERVED_SLUGS = ["home", "shows", "music", "gallery", "contact"];
   const pages = await getCollection("pages");
-  return pages.map((page) => ({
+  const customPages = pages.filter((page) => !RESERVED_SLUGS.includes(page.id));
+  return customPages.map((page) => ({
     params: { slug: page.id },
     props: { page },
   }));

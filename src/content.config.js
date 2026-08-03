@@ -39,8 +39,12 @@ const pages = defineCollection({
   }),
   schema: z.object({
     title: z.string(),
+    subtitle: z.string().optional(),
     description: z.string().optional(),
-    content: z.string(),
+    content: z.string().optional(),
+    heroTagline: z.string().optional(),
+    spotifyEmbedUrl: z.string().optional(),
+    youtubeVideoUrl: z.string().optional(),
     showInNav: z.boolean().default(true),
     navOrder: z.number().default(10),
   }),

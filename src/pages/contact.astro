@@ -5,15 +5,27 @@ import Icon from "../components/Icon.astro";
 import { SITE } from "../config/theme.config.ts";
 import { getBandInfo } from "../lib/bandSettings";
 
+import { getCollection } from "astro:content";
+
 // Replace with your Web3Forms access key from https://web3forms.com
 const WEB3FORMS_ACCESS_KEY = "YOUR_WEB3FORMS_ACCESS_KEY";
 
 const band = await getBandInfo();
+
+let pageData = null;
+try {
+  const pages = await getCollection("pages");
+  pageData = pages.find((p) => p.id === "contact")?.data;
+} catch {}
+
+const title = pageData?.title || "Contact P‡TCH";
+const subtitle = pageData?.subtitle || "For festival bookings, show inquiries, press inquiries, or general messages, send us a message below.";
+const description = pageData?.description || "Get in touch with P‡TCH for booking inquiries, press kits, or general band questions.";
 ---
 
 <BaseLayout
-  title={`Contact & Booking - ${SITE.name}`}
-  description="Get in touch with P‡TCH for booking inquiries, press kits, or general band questions."
+  title={`${title} - ${SITE.name}`}
+  description={description}
   canonical="/contact"
 >
   <div class="mx-auto max-w-5xl px-5 pt-12 pb-16">
@@ -21,9 +33,9 @@ const band = await getBandInfo();
 
     <header class="mt-6 border-b border-border/60 pb-10">
       <span class="text-xs font-medium uppercase tracking-[0.2em] text-primary">Get in Touch</span>
-      <h1 class="mt-2 font-serif text-5xl font-semibold sm:text-6xl">Contact P‡TCH</h1>
+      <h1 class="mt-2 font-serif text-5xl font-semibold sm:text-6xl">{title}</h1>
       <p class="mt-4 max-w-2xl text-lg text-muted-foreground">
-        For festival bookings, show inquiries, press inquiries, or general messages, send us a message below.
+        {subtitle}
       </p>
     </header>
 

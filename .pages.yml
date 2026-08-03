@@ -17,16 +17,20 @@ content:
       - { name: "ticketUrl", label: "Ticket or Info Link", type: "string" }
 
   - name: pages
-    label: "Custom Pages"
+    label: "Pages & Content"
     type: collection
     path: src/content/pages
     extension: json
     format: json
     fields:
       - { name: "title", label: "Page Title", type: "string" }
+      - { name: "subtitle", label: "Page Subtitle / Tagline", type: "string" }
       - { name: "description", label: "Meta Description (SEO)", type: "string" }
-      - { name: "content", label: "Page Body Content", type: "rich-text" }
-      - { name: "showInNav", label: "Show in Navbar?", type: "boolean", default: true }
+      - { name: "content", label: "Body Content (Rich Text for Custom Pages)", type: "rich-text" }
+      - { name: "heroTagline", label: "Hero Banner Tagline (Home Page only)", type: "string" }
+      - { name: "spotifyEmbedUrl", label: "Spotify Embed URL (Music Page only)", type: "string" }
+      - { name: "youtubeVideoUrl", label: "YouTube Video URL (Music Page only)", type: "string" }
+      - { name: "showInNav", label: "Show in Header Navbar?", type: "boolean", default: true }
       - { name: "navOrder", label: "Navbar Order Position (e.g. 10)", type: "number", default: 10 }
 
   - name: settings

@@ -24,8 +24,10 @@ try {
   customPages = [];
 }
 
+const RESERVED_SLUGS = ["home", "shows", "music", "gallery", "contact"];
+
 const dynamicNavItems = customPages
-  .filter((page) => page.data?.showInNav)
+  .filter((page) => page.data?.showInNav && !RESERVED_SLUGS.includes(page.id))
   .sort((a, b) => (a.data.navOrder ?? 10) - (b.data.navOrder ?? 10))
   .map((page) => ({
     label: page.data.title,

@@ -3,11 +3,22 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import Shows from "../components/Shows.astro";
 import { SITE } from "../config/theme.config.ts";
+import { getCollection } from "astro:content";
+
+let pageData = null;
+try {
+  const pages = await getCollection("pages");
+  pageData = pages.find((p) => p.id === "shows")?.data;
+} catch {}
+
+const title = pageData?.title || "Live & Shows";
+const subtitle = pageData?.subtitle || "Experience P‡TCH live on stage. Explore upcoming tour dates and look back at past concert appearances across the Netherlands and Europe.";
+const description = pageData?.description || "Upcoming tour dates, festival appearances, and live performance archive for P‡TCH.";
 ---
 
 <BaseLayout
-  title={`Tour Dates & Live Shows - ${SITE.name}`}
-  description="Upcoming tour dates, festival appearances, and live performance archive for P‡TCH."
+  title={`${title} - ${SITE.name}`}
+  description={description}
   canonical="/shows"
 >
   <div class="mx-auto max-w-6xl px-5 pt-12 pb-6">
@@ -15,9 +26,9 @@ import { SITE } from "../config/theme.config.ts";
 
     <header class="mt-6 border-b border-border/60 pb-10">
       <span class="text-xs font-medium uppercase tracking-[0.2em] text-primary">On Tour</span>
-      <h1 class="mt-2 font-serif text-5xl font-semibold sm:text-6xl">Live & Shows</h1>
+      <h1 class="mt-2 font-serif text-5xl font-semibold sm:text-6xl">{title}</h1>
       <p class="mt-4 max-w-2xl text-lg text-muted-foreground">
-        Experience P‡TCH live on stage. Explore upcoming tour dates and look back at past concert appearances across the Netherlands and Europe.
+        {subtitle}
       </p>
     </header>
   </div>

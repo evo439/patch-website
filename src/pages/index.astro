@@ -4,11 +4,23 @@ import Shows from "../components/Shows.astro";
 import BandMembers from "../components/BandMembers.astro";
 import Icon from "../components/Icon.astro";
 import { SITE } from "../config/theme.config.ts";
+import { getCollection } from "astro:content";
+
+let pageData = null;
+try {
+  const pages = await getCollection("pages");
+  pageData = pages.find((p) => p.id === "home")?.data;
+} catch {}
+
+const title = pageData?.title || SITE.name;
+const subtitle = pageData?.subtitle || "Dutch Melodic Rock";
+const heroTagline = pageData?.heroTagline || "A melodic rock project, created and arranged by creative and seasoned musicians from the Netherlands.";
+const description = pageData?.description || SITE.description;
 ---
 
 <BaseLayout
-  title={`${SITE.name} - Melodic Rock Project`}
-  description={SITE.description}
+  title={`${title} - Melodic Rock Project`}
+  description={description}
   canonical="/"
   flushFooter
 >
@@ -38,50 +50,43 @@ import { SITE } from "../config/theme.config.ts";
     <div class="relative mx-auto max-w-6xl px-5 py-24 sm:py-32 w-full">
       <div class="max-w-3xl text-white">
         <span class="inline-block rounded-full bg-primary/20 px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-primary border border-primary/40 backdrop-blur-sm">
-          Dutch Melodic Rock
+          {subtitle}
         </span>
 
         <h1 class="mt-4 font-serif text-5xl font-extrabold tracking-tight sm:text-7xl lg:text-8xl drop-shadow-lg text-white">
-          P‡TCH
+          {title}
         </h1>
 
-        <p class="mt-6 text-lg sm:text-xl font-normal leading-relaxed text-white/90 drop-shadow max-w-2xl">
-          P‡TCH is a melodic rock project, created and arranged by creative and seasoned musicians from the Netherlands. Sharp, distinguishing guitar & bass lines combined with a raw driving voice and intense lyrics.
+        <p class="mt-6 text-lg sm:text-xl md:text-2xl text-neutral-200 leading-relaxed font-light drop-shadow">
+          {heroTagline}
         </p>
 
-        <div class="mt-8 sm:mt-10 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
-          <a
-            href="/shows"
-            class="inline-flex items-center justify-center gap-2 rounded-md bg-foreground px-6 py-3.5 text-sm font-semibold text-background hover:opacity-90 transition-all shadow-lg text-center"
-          >
-            Upcoming Shows
-            <Icon name="arrow-right" class="h-4 w-4" />
-          </a>
+        <div class="mt-8 flex flex-wrap items-center gap-4">
           <a
             href="/music"
-            class="inline-flex items-center justify-center gap-2 rounded-md border border-white/40 bg-white/10 backdrop-blur-md px-6 py-3.5 text-sm font-semibold text-white hover:bg-white/20 transition-all text-center"
+            class="inline-flex items-center gap-2 rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground transition-transform hover:scale-105 hover:bg-primary/90 shadow-lg shadow-primary/25"
           >
             Listen & Watch
+            <Icon name="chevron-right" class="h-4 w-4" />
+          </a>
+          <a
+            href="/shows"
+            class="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/20 hover:border-white/50"
+          >
+            Tour Dates
           </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Live Shows Preview Section -->
-  <Shows
-    showUpcomingOnly
-    limit={3}
-    title="Upcoming Live Shows"
-    subtitle="Join P‡TCH live at our upcoming concert dates."
-  />
-
-  <div class="bg-muted/20 border-b border-border/60 py-6 text-center">
-    <a href="/shows" class="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-      View full concert schedule & past archive <Icon name="arrow-right" class="h-4 w-4" />
-    </a>
-  </div>
-
-  <!-- We Are P‡TCH Section -->
+  <!-- Band Members Component -->
   <BandMembers />
+
+  <!-- Tour Dates Teaser Component -->
+  <Shows
+    limit={3}
+    title="Upcoming Concerts"
+    subtitle="Catch P‡TCH live on stage across the Netherlands and Europe."
+  />
 </BaseLayout>
